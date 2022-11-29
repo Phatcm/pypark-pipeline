@@ -1,20 +1,65 @@
 from compress import Compressor
 from encrypt import Encryptor
+import database
+import os
+import pysftp
 
 
-# Compress all files in data directory
-path = "data/"
-c = Compressor(path)
-#c.compress_all_files('data.zip')
 
 
-# Encrypt data.zip with AES encryption
-file = "data.zip"
-password = input("Enter password: ")
-e = Encryptor(password)
-#e.encrypt_file(file)
+def main(dir):
+    while len(dir) != 0:
+        choice = int(input("""
+                           1. Press '1' to compress.\n
+                           2. Press '2' to encrypt.\n
+                           3. Press '3' to upload data to sftp.\n
+                           4. Press '4' to download data from sftp.\n
+                           5. Press '5' to decompress and decrypt.\n
+                           6. Press '6' to create database.\n"""))
+        if choice == 1:
+            try:
+                c = Compressor(path)
+                c.compress_all_files('data.zip')
+            except:
+                print("Failed to compress file!\n")
+        elif choice == 2:
+            try:
+                password = input("Enter password: ")
+                e = Encryptor(password)
+                e.encrypt_file(zipfile)
+            except:
+                print("Something were wrong when encrypt file!\n")
+        elif choice == 3:
+                with pysftp.Connection(host=sftpHost, port=sftpPort, username=uname, private_key=privateKeyFilePath, cnopts=cnopts) as sftp:
+                    print('Connected to sftp server')
+                    sftp.cwd("C:/remFolder")
 
-#e.decrypt_file(file)
+                    #Only compress is require, encrypt file is optional
+                    try:
+                        sftp.put(zipenc,preserve_mtime=True)
+                        print("Send data.zip.encrypted")
+                        break
+                    except:
+                        sftp.put(zipfile,preserve_mtime=True)
+                        print("Send data.zip")
+                    
+            
+if __name__ == '__main__':
+    
+    path = "data/"
+    zipfile = path[0:-1]+".zip"
+    zipenc = zipfile+".encrypted"
+    zipdec = zipfile+".decrypted"
+    dir = os.listdir(path)
+    
+    sftpHost = 'localhost'
+    sftpPort = 22
+    uname = 'Admin'
+    privateKeyFilePath = './id_rsa'
+
+    cnopts = pysftp.CnOpts(knownhosts=r'C:\Users\Admin\.ssh\known_hosts')
+    main(dir)
+
 
 
 #check hash
