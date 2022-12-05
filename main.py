@@ -1,6 +1,7 @@
 from compress import Compressor
 from encrypt import Encryptor
 import database
+import etl
 import os
 import pysftp
 
@@ -16,7 +17,7 @@ def main(dir):
                            4. Press '4' to download data from sftp.\n
                            5. Press '5' to decompress and decrypt.\n
                            6. Press '6' to create database.\n
-                           7. Press '7' to run ETL process"""))
+                           7. Press '7' to run ETL process.\n"""))
         if choice == 1:
             try:
                 c = Compressor(path)
@@ -73,7 +74,11 @@ def main(dir):
             except:
                 print("Something were wrong when create starschema")
         elif choice == 7:
-            print("In progress")
+            try:
+                etl.main()
+                print("ETL Full load sucessfully")
+            except:
+                print("Something were wrong when running full load ETL  ")
         
                 
                 
